@@ -40,14 +40,14 @@ def get_all_teams():
 
 
 def get_injured_players():
-    res = requests.get(f"https://api.sportsdata.io/v3/nba/scores/json/InjuredPlayers?key={sportsdata_io_api_key}")
+    res = requests.get(f"https://api.sportsdata.io/v3/nba/projections/json/InjuredPlayers?key={sportsdata_io_api_key}")
     if res.status_code == 200:
         data = json.loads(res.content)
     return None
 
 
 def get_players_stats_2023():
-    res = requests.get(f"https://api.sportsdata.io/v3/nba/scores/json/PlayerSeasonStats/2023?key={sportsdata_io_api_key}")
+    res = requests.get(f"https://api.sportsdata.io/v3/nba/stats/json/PlayerSeasonStats/2023?key={sportsdata_io_api_key}")
     if res.status_code == 200:
         data = json.loads(res.content)
     return None
