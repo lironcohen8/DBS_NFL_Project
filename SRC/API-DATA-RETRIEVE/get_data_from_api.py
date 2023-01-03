@@ -1,74 +1,87 @@
 import json
 import requests
 
-sportsdata_io_api_key = "33f96f364f914387ab00b15698717161"
+college_football_key = "wy5y2yEYzKbBI8kaIIVqyqzVbBpfTk+kakI1OKiogGfB894/GuGqXbgVO5l8bRVH"
+
+headers = {
+    "accept": "application/json",
+    "Authorization": "Bearer wy5y2yEYzKbBI8kaIIVqyqzVbBpfTk+kakI1OKiogGfB894/GuGqXbgVO5l8bRVH"
+}
 
 
-def get_players():
-    res = requests.get(f"https://api.sportsdata.io/v3/nba/scores/json/Players?key={sportsdata_io_api_key}")
+def get_games():  # 3667
+    res = requests.get(f"https://api.collegefootballdata.com/games?year=2022&seasonType=regular", headers=headers)
     if res.status_code == 200:
         data = json.loads(res.content)
+        return data
     return None
 
 
-def get_referees():
-    res = requests.get(f"https://api.sportsdata.io/v3/nba/scores/json/Referees?key={sportsdata_io_api_key}")
+def get_teams():  # 1790
+    res = requests.get(f"https://api.collegefootballdata.com/teams", headers=headers)
     if res.status_code == 200:
         data = json.loads(res.content)
+        return data
     return None
 
 
-def get_stadiums():
-    res = requests.get(f"https://api.sportsdata.io/v3/nba/scores/json/Stadiums?key={sportsdata_io_api_key}")
+def get_players():  # 2616
+    res = requests.get(f"https://api.collegefootballdata.com/player/usage?year=2022", headers=headers)
     if res.status_code == 200:
         data = json.loads(res.content)
+        return data
     return None
 
 
-def get_standings_2023():
-    res = requests.get(f"https://api.sportsdata.io/v3/nba/scores/json/Standings/2023?key={sportsdata_io_api_key}")
+def get_stats():  # 4192
+    res = requests.get(f"https://api.collegefootballdata.com/stats/season?year=2022", headers=headers)
     if res.status_code == 200:
         data = json.loads(res.content)
+        return data
     return None
 
 
-def get_all_teams():
-    res = requests.get(f"https://api.sportsdata.io/v3/nba/scores/json/AllTeams?key={sportsdata_io_api_key}")
+def get_venues():  # 804
+    res = requests.get(f"https://api.collegefootballdata.com/venues", headers=headers)
     if res.status_code == 200:
         data = json.loads(res.content)
+        return data
     return None
 
 
-def get_injured_players():
-    res = requests.get(f"https://api.sportsdata.io/v3/nba/projections/json/InjuredPlayers?key={sportsdata_io_api_key}")
+def get_draft_positions():  # 28
+    res = requests.get(f"https://api.collegefootballdata.com/draft/positions", headers=headers)
     if res.status_code == 200:
         data = json.loads(res.content)
+        return data
     return None
 
 
-def get_players_stats_2023():
-    res = requests.get(f"https://api.sportsdata.io/v3/nba/stats/json/PlayerSeasonStats/2023?key={sportsdata_io_api_key}")
+def get_draft_picks():  # 262
+    res = requests.get(f"https://api.collegefootballdata.com/draft/picks?year=2022", headers=headers)
     if res.status_code == 200:
         data = json.loads(res.content)
+        return data
     return None
 
 
-def get_games_2023():
-    res = requests.get(f"https://api.sportsdata.io/v3/nba/scores/json/Games/2023?key={sportsdata_io_api_key}")
+def get_draft_teams():  # 32
+    res = requests.get(f"https://api.collegefootballdata.com/draft/teams", headers=headers)
     if res.status_code == 200:
         data = json.loads(res.content)
+        return data
     return None
 
 
 def main():
+    get_games()
+    get_teams()
     get_players()
-    get_referees()
-    get_stadiums()
-    get_standings_2023()
-    get_all_teams()
-    get_injured_players()
-    get_players_stats_2023()
-    get_games_2023()
+    get_stats()
+    get_venues()
+    get_draft_positions()
+    get_draft_picks()
+    get_draft_teams()
 
 
 if __name__ == "__main__":
