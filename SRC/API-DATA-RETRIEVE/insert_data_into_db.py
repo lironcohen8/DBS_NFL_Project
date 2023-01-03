@@ -6,7 +6,10 @@ mysql_password = "lironcoh27840"
 db_name = "lironcohen3"
 
 
+# Creating connection to the DB and inserts the data from the API into the tables
 class APIDataInserter:
+
+    # Initialize the connection to the DB
     def __init__(self):
         self.conn = mysql.connector.connect(
             host='localhost',

@@ -1,11 +1,10 @@
 import mysql.connector
 
-PORT = 3305
-USER_NAME = 'lironcohen3'
-PASSWORD = 'lironcoh27840'
-DATABASE = 'lironcohen3'
+mysql_user = "lironcohen3"
+mysql_password = "lironcoh27840"
+db_name = "lironcohen3"
 
-# Dictionary for all tables we want to create with thier Primary keys and forign keys
+# Dictionary for all tables we want to create with their Primary keys and foreign keys
 
 TABLES = {}
 TABLES['games'] = (
@@ -111,17 +110,18 @@ TABLES['draft_teams'] = (
     "  PRIMARY KEY (`display_name`)"
     ")")
 
+
+# Creating connection to the DB and defines its tables schemas
 class DBCreator:
 
-    # initilalize the connection to the DB
+    # Initialize the connection to the DB
     def __init__(self):
-
         self.conn = mysql.connector.connect(
-        host='localhost',
-        port=PORT,
-        user=USER_NAME,
-        password=PASSWORD,
-        database=DATABASE
+            host='localhost',
+            port=3305,
+            user=mysql_user,
+            password=mysql_password,
+            database=db_name
         )
 
     # Foreach table constructed above -> create table
@@ -136,13 +136,14 @@ class DBCreator:
                 # rollback in case of failure will make our creation atomic
 
     # Close connection to db
-    def close_conn(self):
+    def close_connection(self):
         self.conn.close()
+
 
 if __name__ == '__main__':
     # un-comment next line for connecting to tau servers 
-    # os.system("ssh -L 3305:mysqlsrv1.cs.tau.ac.il:3306 ofertlusty@nova.cs.tau.ac.il")
+    # os.system("ssh -L 3305:mysqlsrv1.cs.tau.ac.il:3306 lironcohen3@nova.cs.tau.ac.il")
 
-    dbc = DBCreator()
-    dbc.create_all_tables()
-    dbc.close_conn()
+    db_creator = DBCreator()
+    db_creator.create_all_tables()
+    db_creator.close_connection()
