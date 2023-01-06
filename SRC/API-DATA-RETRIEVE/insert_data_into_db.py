@@ -26,29 +26,31 @@ class APIDataInserter:
         for game in games:
             game_id = game['id']
             if game_id:
-                game_id = game['id']
-                season = game['season']
-                week = game['week']
-                venue_id = game['venue_id']
-                venue = game['venue']
-                home_id = game['home_id']
-                home_team = game['home_team']
-                home_conference = game['home_conference']
-                home_points = game['home_points']
-                home_post_win_prob = game['home_post_win_prob']
-                away_id = game['home_id']
-                away_team = game['home_team']
-                away_conference = game['home_conference']
-                away_points = game['home_points']
-                away_post_win_prob = game['home_post_win_prob']
+                game_id = int(game['id']) if game['id'] is not None else None
+                season = int(game['season']) if game['season'] is not None else None
+                week = int(game['week']) if game['week'] is not None else None
+                venue_id = int(game['venue_id']) if game['venue_id'] is not None else None
+                venue = f"'{game['venue']}'" if game['venue'] is not None else None
+                home_id = int(game['home_id']) if game['home_id'] is not None else None
+                home_team = f"'{game['home_team']}'" if game['home_team'] is not None else None
+                home_conference = f"'{game['home_conference']}'" if game['home_conference'] is not None else None
+                home_points = int(game['home_points']) if game['home_points'] is not None else None
+                home_post_win_prob = float(game['home_post_win_prob']) if game['home_post_win_prob'] is not None else None
+                away_id = int(game['away_id']) if game['away_id'] is not None else None
+                away_team = f"'{game['away_team']}'" if game['away_team'] is not None else None
+                away_conference = f"'{game['away_conference']}'" if game['away_conference'] is not None else None
+                away_points = int(game['away_points']) if game['away_points'] is not None else None
+                away_post_win_prob = float(game['away_post_win_prob']) if game['away_post_win_prob'] is not None else None
 
-                games_query = f"""INSERT INTO games(game_id,season,week,venue_id,venue,home_id,home_team,home_conference,home_points,home_post_win_prob,away_id,away_team,away_conference,away_points,away_post_win_prob) VALUES({game_id},{season},{week},{venue_id},{venue},{home_id},{home_team},{home_conference},{home_points},{home_post_win_prob},{away_id},{away_team},{away_conference},{away_points},{away_post_win_prob})"""
+                games_query = """INSERT INTO games(game_id,season,week,venue_id,venue,home_id,home_team,home_conference,home_points,home_post_win_prob,away_id,away_team,away_conference,away_points,away_post_win_prob)
+                                 VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
 
                 try:
-                    self.cursor.execute(games_query)
+                    self.cursor.execute(games_query, (game_id, season, week, venue_id, venue, home_id, home_team, home_conference, home_points, home_post_win_prob, away_id, away_team, away_conference, away_points, away_post_win_prob))
                     self.conn.commit()
-                except mysql.connector.Error:
-                    self.conn.rollback()
+                except mysql.connector.Error as err:
+                    if err.errno != 1062:  # Duplicate entry for primary key
+                        self.conn.rollback()
 
     def insert_teams_data(self):
         teams = APIDataGetter.get_teams()
@@ -56,20 +58,22 @@ class APIDataInserter:
         for team in teams:
             team_id = team['id']
             if team_id:
-                team_id = team['id']
-                school = team['school']
-                mascot = team['mascot']
-                conference = team['conference']
-                venue_id = team['location']['venue_id']
-                twitter = team['twitter']
+                team_id = int(team['id']) if team['id'] is not None else None
+                school = f"'{team['school']}'" if team['school'] is not None else None
+                mascot = f"'{team['mascot']}'" if team['mascot'] is not None else None
+                conference = f"'{team['conference']}'" if team['conference'] is not None else None
+                venue_id = int(team['location']['venue_id']) if team['location']['venue_id'] is not None else None
+                twitter = f"'{team['twitter']}'" if team['twitter'] is not None else None
 
-                teams_query = f"""INSERT INTO teams(team_id,school,mascot,conference,venue_id,twitter) VALUES({team_id},{school},{mascot},{conference},{venue_id},{twitter}")"""
+                teams_query = """INSERT INTO teams(team_id,school,mascot,conference,venue_id,twitter)
+                                 VALUES(%s,%s,%s,%s,%s,%s)"""
 
                 try:
-                    self.cursor.execute(teams_query)
+                    self.cursor.execute(teams_query, (team_id, school, mascot, conference, venue_id, twitter))
                     self.conn.commit()
-                except mysql.connector.Error:
-                    self.conn.rollback()
+                except mysql.connector.Error as err:
+                    if err.errno != 1062:  # Duplicate entry for primary key
+                        self.conn.rollback()
 
     def insert_players_data(self):
         players = APIDataGetter.get_players()
@@ -77,28 +81,30 @@ class APIDataInserter:
         for player in players:
             player_id = player['id']
             if player_id:
-                player_id = player['id']
-                season = player['season']
-                name = player['name']
-                position = player['position']
-                team = player['team']
-                conference = player['conference']
-                overall = player['usage']['overall']
-                pass_ = player['usage']['pass']
-                rush = player['usage']['rush']
-                firstDown = player['usage']['firstDown']
-                secondDown = player['usage']['secondDown']
-                thirdDown = player['usage']['thirdDown']
-                standardDowns = player['usage']['standardDowns']
-                passingDowns = player['usage']['passingDowns']
+                player_id = int(player['id']) if player['id'] is not None else None
+                season = int(player['season']) if player['season'] is not None else None
+                name = f"'{player['name']}'" if player['name'] is not None else None
+                position = f"'{player['position']}'" if player['position'] is not None else None
+                team = f"'{player['team']}'" if player['team'] is not None else None
+                conference = f"'{player['conference']}'" if player['conference'] is not None else None
+                overall = float(player['usage']['overall']) if player['usage']['overall'] is not None else None
+                pass_ = float(player['usage']['pass']) if player['usage']['pass'] is not None else None
+                rush = float(player['usage']['rush']) if player['usage']['rush'] is not None else None
+                first_down = float(player['usage']['firstDown']) if player['usage']['firstDown'] is not None else None
+                second_down = float(player['usage']['secondDown']) if player['usage']['secondDown'] is not None else None
+                third_down = float(player['usage']['thirdDown']) if player['usage']['thirdDown'] is not None else None
+                standard_downs = float(player['usage']['standardDowns']) if player['usage']['standardDowns'] is not None else None
+                passing_downs = float(player['usage']['passingDowns']) if player['usage']['passingDowns'] is not None else None
 
-                players_query = f"""INSERT INTO players(player_id,season,name,position,team,conference,overall,pass,rush,firstDown,secondDown,thirdDown,standardDowns,passingDowns) VALUES({player_id},{season},{name},{position},{team},{conference},{overall},{pass_},{rush},{firstDown},{secondDown},{thirdDown},{standardDowns},{passingDowns}")"""
+                players_query = """INSERT INTO players(player_id,season,name,position,team,conference,overall,pass,rush,first_down,second_down,third_down,standard_downs,passing_downs) 
+                                VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
 
                 try:
-                    self.cursor.execute(players_query)
+                    self.cursor.execute(players_query, (player_id, season,name, position,team, conference,overall,pass_, rush, first_down, second_down, third_down, standard_downs, passing_downs))
                     self.conn.commit()
-                except mysql.connector.Error:
-                    self.conn.rollback()
+                except mysql.connector.Error as err:
+                    if err.errno != 1062:  # Duplicate entry for primary key
+                        self.conn.rollback()
 
     def insert_stats_data(self):
         stats = APIDataGetter.get_stats()
@@ -106,19 +112,21 @@ class APIDataInserter:
         for stat in stats:
             team = stat['team']
             if team:
-                team = stat['team']
-                season = stat['season']
-                conference = stat['conference']
-                statName = stat['statName']
-                statValue = stat['statValue']
+                team = f"'{stat['team']}'" if stat['team'] is not None else None
+                season = int(stat['season']) if stat['season'] is not None else None
+                conference = f"'{stat['team']}'" if stat['team'] is not None else None
+                stat_name = f"'{stat['statName']}'" if stat['statName'] is not None else None
+                stat_value = f"'{stat['statValue']}'" if stat['statValue'] is not None else None
 
-                stats_query = f"""INSERT INTO stats(team,season,conference,statName,statValue) VALUES({team},{season},{conference},{statName},{statValue}")"""
+                stats_query = """INSERT INTO stats(team,season,conference,stat_name,stat_value) 
+                                 VALUES(%s,%s,%s,%s,%s)"""
 
                 try:
-                    self.cursor.execute(stats_query)
+                    self.cursor.execute(stats_query, (team, season, conference, stat_name, stat_value))
                     self.conn.commit()
-                except mysql.connector.Error:
-                    self.conn.rollback()
+                except mysql.connector.Error as err:
+                    if err.errno != 1062:  # Duplicate entry for primary key
+                        self.conn.rollback()
 
     def insert_venues_data(self):
         venues = APIDataGetter.get_venues()
@@ -126,19 +134,21 @@ class APIDataInserter:
         for venue in venues:
             venue_id = venue['id']
             if venue_id:
-                venue_id = venue['id']
-                name = venue['name']
-                capacity = venue['capacity']
-                city = venue['city']
-                state = venue['state']
+                venue_id = int(venue['id']) if venue['id'] is not None else None
+                name = f"'{venue['name']}'" if venue['name'] is not None else None
+                capacity = int(venue['capacity']) if venue['capacity'] is not None else None
+                city = f"'{venue['city']}'" if venue['city'] is not None else None
+                state = f"'{venue['state']}'" if venue['state'] is not None else None
 
-                venues_query = f"""INSERT INTO venues(venue_id,name,capacity,city,state) VALUES({venue_id},{name},{capacity},{city},{state}")"""
+                venues_query = """INSERT INTO venues(venue_id,name,capacity,city,state)
+                                  VALUES(%s,%s,%s,%s,%s)"""
 
                 try:
-                    self.cursor.execute(venues_query)
+                    self.cursor.execute(venues_query, (venue_id, name, capacity, city, state))
                     self.conn.commit()
-                except mysql.connector.Error:
-                    self.conn.rollback()
+                except mysql.connector.Error as err:
+                    if err.errno != 1062:  # Duplicate entry for primary key
+                        self.conn.rollback()
 
     def insert_draft_positions_data(self):
         draft_positions = APIDataGetter.get_draft_positions()
@@ -146,16 +156,18 @@ class APIDataInserter:
         for position in draft_positions:
             position_name = position['name']
             if position_name:
-                position_name = position['name']
-                abbreviation = position['abbreviation']
+                position_name = f"'{position['name']}'" if position['name'] is not None else None
+                abbreviation = f"'{position['abbreviation']}'" if position['abbreviation'] is not None else None
 
-                draft_positions_query = f"""INSERT INTO draft_positions(position_name,abbreviation) VALUES({position_name},{abbreviation}")"""
+                draft_positions_query = """INSERT INTO draft_positions(position_name, abbreviation)
+                                           VALUES (%s, %s)"""
 
                 try:
-                    self.cursor.execute(draft_positions_query)
+                    self.cursor.execute(draft_positions_query, (position_name, abbreviation))
                     self.conn.commit()
-                except mysql.connector.Error:
-                    self.conn.rollback()
+                except mysql.connector.Error as err:
+                    if err.errno != 1062:  # Duplicate entry for primary key
+                        self.conn.rollback()
 
     def insert_draft_picks_data(self):
         draft_picks = APIDataGetter.get_draft_picks()
@@ -163,27 +175,29 @@ class APIDataInserter:
         for draft_pick in draft_picks:
             college_athlete_id = draft_pick['collegeAthleteId']
             if college_athlete_id:
-                college_athlete_id = draft_pick['collegeAthleteId']
-                nfl_athlete_id = draft_pick['nflAtheleteId']
-                college_id = draft_pick['collegeId']
-                college_team = draft_pick['collegeTeam']
-                college_conference = draft_pick['collegeConference']
-                nfl_team = draft_pick['nflTeam']
-                name = draft_pick['name']
-                position = draft_pick['position']
-                height = draft_pick['height']
-                weight = draft_pick['weight']
-                overall = draft_pick['overall']
-                round = draft_pick['round']
-                pick = draft_pick['pick']
+                college_athlete_id = int(draft_pick['collegeAthleteId']) if draft_pick['collegeAthleteId'] is not None else None
+                nfl_athlete_id = int(draft_pick['nflAthleteId']) if draft_pick['nflAthleteId'] is not None else None
+                college_id = int(draft_pick['collegeId']) if draft_pick['collegeId'] is not None else None
+                college_team = f"'{draft_pick['collegeTeam']}'" if draft_pick['collegeTeam'] is not None else None
+                college_conference = f"'{draft_pick['collegeConference']}'" if draft_pick['collegeConference'] is not None else None
+                nfl_team = f"'{draft_pick['nflTeam']}'" if draft_pick['nflTeam'] is not None else None
+                name = f"'{draft_pick['name']}'" if draft_pick['name'] is not None else None
+                position = f"'{draft_pick['position']}'" if draft_pick['position'] is not None else None
+                height = int(draft_pick['height']) if draft_pick['height'] is not None else None
+                weight = int(draft_pick['weight']) if draft_pick['weight'] is not None else None
+                overall = int(draft_pick['overall']) if draft_pick['overall'] is not None else None
+                round_ = int(draft_pick['round']) if draft_pick['round'] is not None else None
+                pick = int(draft_pick['pick']) if draft_pick['pick'] is not None else None
 
-                draft_picks_query = f"""INSERT INTO draft_picks(college_athlete_id,nfl_athlete_id,college_id,college_team,college_conference,nfl_team,name,position,height,weight,overall,round,pick) VALUES({college_athlete_id},{nfl_athlete_id},{college_id},{college_team},{college_conference},{nfl_team},{name},{position},{height},{weight},{overall},{round},{pick}")"""
+                draft_picks_query = """INSERT INTO draft_picks(college_athlete_id,nfl_athlete_id,college_id,college_team,college_conference,nfl_team,name,position,height,weight,overall,round,pick)
+                                    VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
 
                 try:
-                    self.cursor.execute(draft_picks_query)
+                    self.cursor.execute(draft_picks_query, (college_athlete_id, nfl_athlete_id, college_id, college_team, college_conference, nfl_team, name, position, height, weight, overall, round_, pick))
                     self.conn.commit()
-                except mysql.connector.Error:
-                    self.conn.rollback()
+                except mysql.connector.Error as err:
+                    if err.errno != 1062:  # Duplicate entry for primary key
+                        self.conn.rollback()
 
     def insert_draft_teams_data(self):
         draft_teams = APIDataGetter.get_draft_teams()
@@ -191,14 +205,36 @@ class APIDataInserter:
         for draft_team in draft_teams:
             display_name = draft_team['displayName']
             if display_name:
-                display_name = draft_team['displayName']
-                nickname = draft_team['nickname']
-                location = draft_team['location']
+                display_name = f"'{draft_team['displayName']}'" if draft_team['displayName'] is not None else None
+                nickname = f"'{draft_team['nickname']}'" if draft_team['nickname'] is not None else None
+                location = f"'{draft_team['location']}'" if draft_team['location'] is not None else None
 
-            draft_teams_query = f"""INSERT INTO draft_teams(display_name,nickname,location) VALUES({display_name},{nickname},{location}")"""
+            draft_teams_query = """INSERT INTO draft_teams(display_name,nickname,location) 
+                                   VALUES(%s, %s, %s)"""
 
             try:
-                self.cursor.execute(draft_teams_query)
+                self.cursor.execute(draft_teams_query, (display_name, nickname, location))
                 self.conn.commit()
-            except mysql.connector.Error:
-                self.conn.rollback()
+            except mysql.connector.Error as err:
+                if err.errno != 1062:  # Duplicate entry for primary key
+                    self.conn.rollback()
+
+    def close_conn(self):
+        self.conn.close()
+
+    # fill all tables with data from the API
+    def fill_all_tables(self):
+        self.insert_games_data()
+        self.insert_teams_data()
+        self.insert_players_data()
+        self.insert_stats_data()
+        self.insert_venues_data()
+        self.insert_draft_positions_data()
+        self.insert_draft_picks_data()
+        self.insert_draft_teams_data()
+
+
+if __name__ == '__main__':
+    data_inserter = APIDataInserter()
+    data_inserter.fill_all_tables()
+    data_inserter.close_conn()

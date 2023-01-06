@@ -13,7 +13,7 @@ headers = {
 class APIDataGetter:
 
     @staticmethod
-    def get_games():  # Number of records - 3667
+    def get_games():  # Number of records - 3668
         res = requests.get(f"https://api.collegefootballdata.com/games?year=2022&seasonType=regular", headers=headers)
         if res.status_code == 200:
             data = json.loads(res.content)

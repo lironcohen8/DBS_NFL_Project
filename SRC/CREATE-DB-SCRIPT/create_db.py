@@ -1,3 +1,4 @@
+import os
 import mysql.connector
 
 mysql_user = "lironcohen3"
@@ -49,11 +50,11 @@ TABLES['players'] = (
     "  `overall` FLOAT,"
     "  `pass` FLOAT,"
     "  `rush` FLOAT,"
-    "  `firstDown` FLOAT,"
-    "  `secondDown` FLOAT,"
-    "  `thirdDown` FLOAT,"
-    "  `standardDowns` FLOAT,"
-    "  `passingDowns` FLOAT,"
+    "  `first_down` FLOAT,"
+    "  `second_down` FLOAT,"
+    "  `third_down` FLOAT,"
+    "  `standard_downs` FLOAT,"
+    "  `passing_downs` FLOAT,"
     "  PRIMARY KEY (`player_id`)"
     ")")
 
@@ -62,9 +63,9 @@ TABLES['stats'] = (
     "  `team` varchar(100) NOT NULL,"
     "  `season` INT,"
     "  `conference` varchar(100),"
-    "  `statName` varchar(100),"
-    "  `statValue` varchar(100),"
-    "  PRIMARY KEY (`team`)"
+    "  `stat_name` varchar(100) NOT NULL,"
+    "  `stat_value` varchar(100) NOT NULL,"
+    "  PRIMARY KEY (`team`, `conference`, `stat_name`)"
     ")")
 
 TABLES['venues'] = (
