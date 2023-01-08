@@ -111,6 +111,31 @@ TABLES['draft_teams'] = (
     "  PRIMARY KEY (`display_name`)"
     ")")
 
+INDEXES = {}
+INDEXES['games'] = (
+    "CREATE INDEX XXX ON games(XXX)")
+
+INDEXES['teams'] = (
+    "CREATE INDEX XXX ON teams(XXX)")
+
+INDEXES['players'] = (
+    "CREATE INDEX XXX ON players(XXX)")
+
+INDEXES['stats'] = (
+    "CREATE INDEX XXX ON stats(XXX)")
+
+INDEXES['venues'] = (
+    "CREATE INDEX XXX ON venues(XXX)")
+
+INDEXES['draft_positions'] = (
+    "CREATE INDEX XXX ON draft_positions(XXX)")
+
+INDEXES['draft_picks'] = (
+    "CREATE INDEX XXX ON draft_picks(XXX)")
+
+INDEXES['draft_teams'] = (
+    "CREATE INDEX XXX ON draft_teams(XXX)")
+
 
 # Creating connection to the DB and defines its tables schemas
 class DBCreator:
@@ -136,6 +161,16 @@ class DBCreator:
                 self.conn.rollback()
                 # rollback in case of failure will make our creation atomic
 
+    def create_all_indexes(self):
+        cursor = self.conn.cursor()
+        for table_name in INDEXES.keys():
+            try:
+                cursor.execute(INDEXES[table_name])
+                self.conn.commit()
+            except mysql.connector.Error as err:
+                self.conn.rollback()
+                # rollback in case of failure will make our creation atomic
+
     # Close connection to db
     def close_connection(self):
         self.conn.close()
@@ -147,4 +182,5 @@ if __name__ == '__main__':
 
     db_creator = DBCreator()
     db_creator.create_all_tables()
+    db_creator.create_all_indexes()
     db_creator.close_connection()
