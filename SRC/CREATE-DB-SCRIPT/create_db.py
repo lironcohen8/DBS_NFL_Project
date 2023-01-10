@@ -1,11 +1,11 @@
+import os
 import mysql.connector
 
-PORT = 3305
-USER_NAME = 'lironcohen3'
-PASSWORD = 'lironcoh27840'
-DATABASE = 'lironcohen3'
+mysql_user = "lironcohen3"
+mysql_password = "lironcoh27840"
+db_name = "lironcohen3"
 
-# Dictionary for all tables we want to create with thier Primary keys and forign keys
+# Dictionary for all tables we want to create with their Primary keys and foreign keys
 
 TABLES = {}
 TABLES['games'] = (
@@ -50,11 +50,11 @@ TABLES['players'] = (
     "  `overall` FLOAT,"
     "  `pass` FLOAT,"
     "  `rush` FLOAT,"
-    "  `firstDown` FLOAT,"
-    "  `secondDown` FLOAT,"
-    "  `thirdDown` FLOAT,"
-    "  `standardDowns` FLOAT,"
-    "  `passingDowns` FLOAT,"
+    "  `first_down` FLOAT,"
+    "  `second_down` FLOAT,"
+    "  `third_down` FLOAT,"
+    "  `standard_downs` FLOAT,"
+    "  `passing_downs` FLOAT,"
     "  PRIMARY KEY (`player_id`)"
     ")")
 
@@ -63,9 +63,9 @@ TABLES['stats'] = (
     "  `team` varchar(100) NOT NULL,"
     "  `season` INT,"
     "  `conference` varchar(100),"
-    "  `statName` varchar(100),"
-    "  `statValue` varchar(100),"
-    "  PRIMARY KEY (`team`)"
+    "  `stat_name` varchar(100) NOT NULL,"
+    "  `stat_value` varchar(100) NOT NULL,"
+    "  PRIMARY KEY (`team`, `conference`, `stat_name`)"
     ")")
 
 TABLES['venues'] = (
@@ -111,17 +111,43 @@ TABLES['draft_teams'] = (
     "  PRIMARY KEY (`display_name`)"
     ")")
 
+INDEXES = {}
+INDEXES['games'] = (
+    "CREATE INDEX XXX ON games(XXX)")
+
+INDEXES['teams'] = (
+    "CREATE INDEX XXX ON teams(XXX)")
+
+INDEXES['players'] = (
+    "CREATE INDEX XXX ON players(XXX)")
+
+INDEXES['stats'] = (
+    "CREATE INDEX XXX ON stats(XXX)")
+
+INDEXES['venues'] = (
+    "CREATE INDEX XXX ON venues(XXX)")
+
+INDEXES['draft_positions'] = (
+    "CREATE INDEX XXX ON draft_positions(XXX)")
+
+INDEXES['draft_picks'] = (
+    "CREATE INDEX XXX ON draft_picks(XXX)")
+
+INDEXES['draft_teams'] = (
+    "CREATE INDEX XXX ON draft_teams(XXX)")
+
+
+# Creating connection to the DB and defines its tables schemas
 class DBCreator:
 
-    # initilalize the connection to the DB
+    # Initialize the connection to the DB
     def __init__(self):
-
         self.conn = mysql.connector.connect(
-        host='localhost',
-        port=PORT,
-        user=USER_NAME,
-        password=PASSWORD,
-        database=DATABASE
+            host='localhost',
+            port=3305,
+            user=mysql_user,
+            password=mysql_password,
+            database=db_name
         )
 
     # Foreach table constructed above -> create table
@@ -135,14 +161,26 @@ class DBCreator:
                 self.conn.rollback()
                 # rollback in case of failure will make our creation atomic
 
+    def create_all_indexes(self):
+        cursor = self.conn.cursor()
+        for table_name in INDEXES.keys():
+            try:
+                cursor.execute(INDEXES[table_name])
+                self.conn.commit()
+            except mysql.connector.Error as err:
+                self.conn.rollback()
+                # rollback in case of failure will make our creation atomic
+
     # Close connection to db
-    def close_conn(self):
+    def close_connection(self):
         self.conn.close()
+
 
 if __name__ == '__main__':
     # un-comment next line for connecting to tau servers 
-    # os.system("ssh -L 3305:mysqlsrv1.cs.tau.ac.il:3306 ofertlusty@nova.cs.tau.ac.il")
+    # os.system("ssh -L 3305:mysqlsrv1.cs.tau.ac.il:3306 lironcohen3@nova.cs.tau.ac.il")
 
-    dbc = DBCreator()
-    dbc.create_all_tables()
-    dbc.close_conn()
+    db_creator = DBCreator()
+    db_creator.create_all_tables()
+    db_creator.create_all_indexes()
+    db_creator.close_connection()
