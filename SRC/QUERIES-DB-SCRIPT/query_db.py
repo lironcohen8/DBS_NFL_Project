@@ -63,8 +63,10 @@ class DBQuery:
                         AVG(P.third_down) AS avg_third_down
                    FROM
                         lironcohen3.players AS P
-                   LEFT JOIN lironcohen3.teams AS T ON P.team = T.team_name
-                   LEFT JOIN lironcohen3.games AS G ON (G.home_id = T.team_id OR G.away_id = T.team_id)
+                   LEFT JOIN lironcohen3.teams AS T
+                        ON P.team = T.team_name
+                   LEFT JOIN lironcohen3.games AS G
+                        ON (G.home_id = T.team_id OR G.away_id = T.team_id)
                    WHERE 
                         P.position = "{input_position_abb}"
                    GROUP BY P.player_id
@@ -131,7 +133,7 @@ class DBQuery:
                     WHERE 
                         DT.location = Dpick.nfl_team
                         AND Dpos.position_name = Dpick.position
-                    GROUP BY Dpos.position_name, Dpos.abbreviation"""
+                    GROUP BY Dpos.position_name"""
 
         try:
             self.cursor.execute(query)
@@ -143,7 +145,7 @@ class DBQuery:
     # query 6
     def get_most_picked_college_teams_in_draft(self):
 
-        query = f"""SELECT T.team_name, T.conference, T.mascot, T.twitter, V.name AS venue_name, SUM(overall) AS sum_overall_draft
+        query = f"""SELECT T.team_name, T.conference, T.mascot, T.twitter, V.name AS venue_name, SUM(DP.overall) AS sum_overall_draft
                     FROM
                         lironcohen3.draft_picks AS DP,
                         lironcohen3.teams AS T,

@@ -8,6 +8,29 @@ db_name = "lironcohen3"
 # Dictionary for all tables we want to create with their Primary keys and foreign keys
 
 TABLES = {}
+
+TABLES['venues'] = (
+    "CREATE TABLE `venues` ("
+    "  `venue_id` INT NOT NULL,"
+    "  `name` varchar(100) NOT NULL,"
+    "  `capacity` INT,"
+    "  `city` varchar(100),"
+    "  `state` varchar(100),"
+    "  PRIMARY KEY (`venue_id`)"
+    ")")
+
+TABLES['teams'] = (
+    "CREATE TABLE `teams` ("
+    "  `team_id` INT NOT NULL,"
+    "  `team_name` varchar(100) NOT NULL,"
+    "  `mascot` varchar(100),"
+    "  `conference` varchar(100),"
+    "  `venue_id` INT,"
+    "  `twitter` varchar(100),"
+    "  PRIMARY KEY (`team_id`),"
+    "  FOREIGN KEY (`venue_id`) REFERENCES venues(`venue_id`)" 
+    ")")
+
 TABLES['games'] = (
     "CREATE TABLE `games` ("
     "  `game_id` INT NOT NULL,"
@@ -20,18 +43,10 @@ TABLES['games'] = (
     "  `away_id` INT,"
     "  `away_points` INT,"
     "  `away_post_win_prob` FLOAT,"
-    "  PRIMARY KEY (`game_id`)"
-    ")")
-
-TABLES['teams'] = (
-    "CREATE TABLE `teams` ("
-    "  `team_id` INT NOT NULL,"
-    "  `team_name` varchar(100) NOT NULL,"
-    "  `mascot` varchar(100),"
-    "  `conference` varchar(100),"
-    "  `venue_id` INT,"
-    "  `twitter` varchar(100),"
-    "  PRIMARY KEY (`team_id`)"
+    "  PRIMARY KEY (`game_id`),"
+    "  FOREIGN KEY (`venue_id`) REFERENCES venues(`venue_id`),"
+    "  FOREIGN KEY (`home_id`) REFERENCES teams(`team_id`),"
+    "  FOREIGN KEY (`away_id`) REFERENCES teams(`team_id`)"
     ")")
 
 TABLES['players'] = (
@@ -62,16 +77,6 @@ TABLES['stats'] = (
     "  PRIMARY KEY (`team`, `stat_name`)"
     ")")
 
-TABLES['venues'] = (
-    "CREATE TABLE `venues` ("
-    "  `venue_id` INT NOT NULL,"
-    "  `name` varchar(100) NOT NULL,"
-    "  `capacity` INT,"
-    "  `city` varchar(100),"
-    "  `state` varchar(100),"
-    "  PRIMARY KEY (`venue_id`)"
-    ")")
-
 TABLES['draft_positions'] = (
     "CREATE TABLE `draft_positions` ("
     "  `position_name` varchar(100) NOT NULL,"
@@ -93,7 +98,9 @@ TABLES['draft_picks'] = (
     "  `overall` INT,"
     "  `round` INT,"
     "  `pick` INT,"
-    "  PRIMARY KEY (`college_athlete_id`)"
+    "  PRIMARY KEY (`college_athlete_id`),"
+    "  FOREIGN KEY (`position`) REFERENCES draft_positions(`position_name`),"
+    "  FOREIGN KEY (`college_id`) REFERENCES teams(`team_id`)" 
     ")")
 
 TABLES['draft_teams'] = (
@@ -114,8 +121,11 @@ INDEXES['game_away_id'] = (
 INDEXES['teams'] = (
     "CREATE INDEX team_name_ind ON teams(`team_name`)")
 
-INDEXES['players'] = (
+INDEXES['players_team'] = (
     "CREATE INDEX team_ind ON players(`team`)")
+
+INDEXES['players_position'] = (
+    "CREATE INDEX position_ind ON players(`position`)")
 
 INDEXES['stats'] = (
     "CREATE INDEX stat_name_ind ON stats(`stat_name`)")
@@ -124,10 +134,10 @@ INDEXES['venues'] = (
     "CREATE INDEX capacity_ind ON venues(`capacity`)")
 
 INDEXES['draft_picks'] = (
-    "CREATE INDEX XXX ON draft_picks(XXX)")
+    "CREATE INDEX college_id_ind ON draft_picks(`college_id`)")
 
 INDEXES['draft_teams'] = (
-    "CREATE INDEX XXX ON draft_teams(XXX)")
+    "CREATE INDEX location_ind ON draft_teams(`location`)")
 
 
 # Creating connection to the DB and defines its tables schemas

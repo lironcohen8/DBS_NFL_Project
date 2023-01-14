@@ -44,7 +44,7 @@ class APIDataInserter:
                     self.cursor.execute(games_query, (game_id, season, week, venue_id, home_id, home_points, home_post_win_prob, away_id, away_points, away_post_win_prob))
                     self.conn.commit()
                 except mysql.connector.Error as err:
-                    if err.errno != 1062:  # Duplicate entry for primary key
+                    if err.errno != 1062 and err.errno != 1216:  # Duplicate entry for primary key or foreign key constraints
                         self.conn.rollback()
 
     def insert_teams_data(self):
@@ -67,7 +67,7 @@ class APIDataInserter:
                     self.cursor.execute(teams_query, (team_id, team_name, mascot, conference, venue_id, twitter))
                     self.conn.commit()
                 except mysql.connector.Error as err:
-                    if err.errno != 1062:  # Duplicate entry for primary key
+                    if err.errno != 1062 and err.errno != 1216:  # Duplicate entry for primary key or foreign key constraints
                         self.conn.rollback()
 
     def insert_players_data(self):
@@ -97,7 +97,7 @@ class APIDataInserter:
                     self.cursor.execute(players_query, (player_id, season, name, position, team, overall, pass_, rush, first_down, second_down, third_down, standard_downs, passing_downs))
                     self.conn.commit()
                 except mysql.connector.Error as err:
-                    if err.errno != 1062:  # Duplicate entry for primary key
+                    if err.errno != 1062 and err.errno != 1216:  # Duplicate entry for primary key or foreign key constraints
                         self.conn.rollback()
 
     def insert_stats_data(self):
@@ -119,7 +119,7 @@ class APIDataInserter:
                     self.cursor.execute(stats_query, (team, season, conference, stat_name, stat_value))
                     self.conn.commit()
                 except mysql.connector.Error as err:
-                    if err.errno != 1062:  # Duplicate entry for primary key
+                    if err.errno != 1062 and err.errno != 1216:  # Duplicate entry for primary key or foreign key constraints
                         self.conn.rollback()
 
     def insert_venues_data(self):
@@ -141,7 +141,7 @@ class APIDataInserter:
                     self.cursor.execute(venues_query, (venue_id, name, capacity, city, state))
                     self.conn.commit()
                 except mysql.connector.Error as err:
-                    if err.errno != 1062:  # Duplicate entry for primary key
+                    if err.errno != 1062 and err.errno != 1216:  # Duplicate entry for primary key or foreign key constraints
                         self.conn.rollback()
 
     def insert_draft_positions_data(self):
@@ -160,7 +160,7 @@ class APIDataInserter:
                     self.cursor.execute(draft_positions_query, (position_name, abbreviation))
                     self.conn.commit()
                 except mysql.connector.Error as err:
-                    if err.errno != 1062:  # Duplicate entry for primary key
+                    if err.errno != 1062 and err.errno != 1216:  # Duplicate entry for primary key or foreign key constraints
                         self.conn.rollback()
 
     def insert_draft_picks_data(self):
@@ -189,7 +189,7 @@ class APIDataInserter:
                     self.cursor.execute(draft_picks_query, (college_athlete_id, nfl_athlete_id, college_id, college_team, nfl_team, name, position, height, weight, overall, round_, pick))
                     self.conn.commit()
                 except mysql.connector.Error as err:
-                    if err.errno != 1062:  # Duplicate entry for primary key
+                    if err.errno != 1062 and err.errno != 1216:  # Duplicate entry for primary key or foreign key constraints
                         self.conn.rollback()
 
     def insert_draft_teams_data(self):
@@ -209,7 +209,7 @@ class APIDataInserter:
                 self.cursor.execute(draft_teams_query, (display_name, nickname, location))
                 self.conn.commit()
             except mysql.connector.Error as err:
-                if err.errno != 1062:  # Duplicate entry for primary key
+                if err.errno != 1062 and err.errno != 1216:  # Duplicate entry for primary key or foreign key constraints
                     self.conn.rollback()
 
     def close_conn(self):
@@ -217,11 +217,11 @@ class APIDataInserter:
 
     # fill all tables with data from the API
     def fill_all_tables(self):
-        self.insert_games_data()
+        self.insert_venues_data()
         self.insert_teams_data()
+        self.insert_games_data()
         self.insert_players_data()
         self.insert_stats_data()
-        self.insert_venues_data()
         self.insert_draft_positions_data()
         self.insert_draft_picks_data()
         self.insert_draft_teams_data()
