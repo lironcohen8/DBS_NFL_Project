@@ -19,7 +19,7 @@ class DBQuery:
         self.cursor = self.conn.cursor()
 
     # query 1
-    def get_teams_that_won_against_odds(self):
+    def m(self):
 
         query = """SELECT T1.team_name AS home_team, T2.team_name as away_team, G.season, G.week, G.away_points, G.home_points, G.away_post_win_prob AS prob, V.name as venue_name
                     FROM
