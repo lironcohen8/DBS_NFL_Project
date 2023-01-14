@@ -127,8 +127,11 @@ INDEXES['players_team'] = (
 INDEXES['players_position'] = (
     "CREATE INDEX position_ind ON players(`position`)")
 
-INDEXES['stats'] = (
+INDEXES['stats_name'] = (
     "CREATE INDEX stat_name_ind ON stats(`stat_name`)")
+
+INDEXES['stats_team'] = (
+    "CREATE INDEX team_ind ON stats(`team`)")
 
 INDEXES['venues'] = (
     "CREATE INDEX capacity_ind ON venues(`capacity`)")
