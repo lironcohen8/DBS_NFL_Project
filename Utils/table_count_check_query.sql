@@ -4,7 +4,7 @@ SELECT COUNT(*) FROM players; # should be 2616
 
 SELECT COUNT(*) FROM stats; # should be 4192
 
-SELECT COUNT(*) FROM teams; # should be 1790
+SELECT COUNT(*) FROM teams; # should be 1791
 
 SELECT COUNT(*) FROM venues; # should be 804
 
