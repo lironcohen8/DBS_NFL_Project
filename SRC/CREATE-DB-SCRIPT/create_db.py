@@ -14,15 +14,10 @@ TABLES['games'] = (
     "  `season` INT,"
     "  `week` INT,"
     "  `venue_id` INT,"
-    "  `venue` varchar(100),"
     "  `home_id` INT,"
-    "  `home_team` varchar(100),"
-    "  `home_conference` varchar(100),"
     "  `home_points` INT,"
     "  `home_post_win_prob` FLOAT,"
     "  `away_id` INT,"
-    "  `away_team` varchar(100),"
-    "  `away_conference` varchar(100),"
     "  `away_points` INT,"
     "  `away_post_win_prob` FLOAT,"
     "  PRIMARY KEY (`game_id`)"
@@ -31,7 +26,7 @@ TABLES['games'] = (
 TABLES['teams'] = (
     "CREATE TABLE `teams` ("
     "  `team_id` INT NOT NULL,"
-    "  `school` varchar(100) NOT NULL,"
+    "  `team_name` varchar(100) NOT NULL,"
     "  `mascot` varchar(100),"
     "  `conference` varchar(100),"
     "  `venue_id` INT,"
@@ -46,7 +41,6 @@ TABLES['players'] = (
     "  `name` varchar(100) NOT NULL,"
     "  `position` varchar(100),"
     "  `team` varchar(100),"
-    "  `conference` varchar(100),"
     "  `overall` FLOAT,"
     "  `pass` FLOAT,"
     "  `rush` FLOAT,"
@@ -64,8 +58,8 @@ TABLES['stats'] = (
     "  `season` INT,"
     "  `conference` varchar(100),"
     "  `stat_name` varchar(100) NOT NULL,"
-    "  `stat_value` varchar(100) NOT NULL,"
-    "  PRIMARY KEY (`team`, `conference`, `stat_name`)"
+    "  `stat_value` INT,"
+    "  PRIMARY KEY (`team`, `stat_name`)"
     ")")
 
 TABLES['venues'] = (
@@ -91,7 +85,6 @@ TABLES['draft_picks'] = (
     "  `nfl_athlete_id` INT,"
     "  `college_id` INT,"
     "  `college_team` varchar(100),"
-    "  `college_conference` varchar(100),"
     "  `nfl_team` varchar(100),"
     "  `name` varchar(100),"
     "  `position` varchar(100),"
@@ -112,23 +105,23 @@ TABLES['draft_teams'] = (
     ")")
 
 INDEXES = {}
-INDEXES['games'] = (
-    "CREATE INDEX XXX ON games(XXX)")
+INDEXES['games_home_id'] = (
+    "CREATE INDEX home_id_ind ON games(`home_id`)")
+
+INDEXES['game_away_id'] = (
+    "CREATE INDEX away_id_ind ON games(`away_id`)")
 
 INDEXES['teams'] = (
-    "CREATE INDEX XXX ON teams(XXX)")
+    "CREATE INDEX team_name_ind ON teams(`team_name`)")
 
 INDEXES['players'] = (
-    "CREATE INDEX XXX ON players(XXX)")
+    "CREATE INDEX team_ind ON players(`team`)")
 
 INDEXES['stats'] = (
-    "CREATE INDEX XXX ON stats(XXX)")
+    "CREATE INDEX stat_name_ind ON stats(`stat_name`)")
 
 INDEXES['venues'] = (
-    "CREATE INDEX XXX ON venues(XXX)")
-
-INDEXES['draft_positions'] = (
-    "CREATE INDEX XXX ON draft_positions(XXX)")
+    "CREATE INDEX capacity_ind ON venues(`capacity`)")
 
 INDEXES['draft_picks'] = (
     "CREATE INDEX XXX ON draft_picks(XXX)")
@@ -163,9 +156,9 @@ class DBCreator:
 
     def create_all_indexes(self):
         cursor = self.conn.cursor()
-        for table_name in INDEXES.keys():
+        for index_name in INDEXES.keys():
             try:
-                cursor.execute(INDEXES[table_name])
+                cursor.execute(INDEXES[index_name])
                 self.conn.commit()
             except mysql.connector.Error as err:
                 self.conn.rollback()
