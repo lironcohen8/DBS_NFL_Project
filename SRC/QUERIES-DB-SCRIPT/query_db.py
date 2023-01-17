@@ -160,7 +160,9 @@ class DBQuery:
                         lironcohen3.draft_picks AS DP,
                         lironcohen3.teams AS T,
                         lironcohen3.venues AS V
-                    WHERE T.team_id = DP.college_id AND T.venue_id = V.venue_id
+                    WHERE 
+                        T.team_id = DP.college_id 
+                        AND T.venue_id = V.venue_id
                     GROUP BY T.team_name, T.team_id
                     HAVING cnt_overall_draft > 1
                     ORDER BY avg_overall_draft
