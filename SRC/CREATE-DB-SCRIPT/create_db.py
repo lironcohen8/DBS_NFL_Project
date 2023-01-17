@@ -134,7 +134,8 @@ INDEXES['stats_team'] = (
     "CREATE INDEX team_ind ON stats(`team`)")
 
 INDEXES['venues'] = (
-    "CREATE INDEX capacity_ind ON venues(`capacity`)")
+    "CREATE INDEX state_ind ON venues(`state`)")
+
 
 INDEXES['draft_picks'] = (
     "CREATE INDEX college_id_ind ON draft_picks(`college_id`)")
