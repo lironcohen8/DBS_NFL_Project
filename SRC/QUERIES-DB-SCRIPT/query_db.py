@@ -19,7 +19,7 @@ class DBQuery:
         self.cursor = self.conn.cursor()
 
     # query 1
-    def m(self):
+    def get_teams_that_won_against_odds(self):
 
         query = """SELECT T1.team_name AS home_team, T2.team_name as away_team, G.season, G.week, G.away_points, G.home_points, G.away_post_win_prob AS prob, V.name as venue_name
                     FROM
@@ -145,18 +145,41 @@ class DBQuery:
 
     # query 6
     def get_most_picked_college_teams_in_draft(self):
-
-        query = f"""SELECT T.team_name, T.conference, T.mascot, T.twitter, V.name AS venue_name, SUM(DP.overall) AS sum_overall_draft
+    
+        # TODO: check!
+        query = f"""SELECT 	
+                        T.team_name, 
+                        T.conference, 
+                        T.mascot, 
+                        T.twitter, 
+                        V.name AS venue_name, 
+                        SUM(DP.overall) AS sum_overall_draft, 
+                        count(DP.overall) as cnt_overall_draft, 
+                        (SUM(DP.overall)/count(DP.overall)) as avg_overall_draft
                     FROM
                         lironcohen3.draft_picks AS DP,
                         lironcohen3.teams AS T,
                         lironcohen3.venues AS V
-                    WHERE
-                        T.team_id = DP.college_id
+                    WHERE 
+                        T.team_id = DP.college_id 
                         AND T.venue_id = V.venue_id
                     GROUP BY T.team_name, T.team_id
-                    ORDER BY sum_overall_draft DESC
+                    HAVING cnt_overall_draft > 1
+                    ORDER BY avg_overall_draft
                     LIMIT 10"""
+
+        #TODO: delete
+        #query = f"""SELECT T.team_name, T.conference, T.mascot, T.twitter, V.name AS venue_name, SUM(DP.overall) AS sum_overall_draft
+        #            FROM
+        #                lironcohen3.draft_picks AS DP,
+        #                lironcohen3.teams AS T,
+        #                lironcohen3.venues AS V
+        #            WHERE
+        #                T.team_id = DP.college_id
+        #                AND T.venue_id = V.venue_id
+        #            GROUP BY T.team_name, T.team_id
+        #            ORDER BY sum_overall_draft DESC
+        #            LIMIT 10"""
 
         try:
             self.cursor.execute(query)
