@@ -139,9 +139,8 @@ INDEXES['venues'] = (
 INDEXES['draft_picks_id'] = (
     "CREATE INDEX college_id_ind ON draft_picks(`college_id`)")
 
-# TODO: check index is working
 INDEXES['draft_picks_nfl_team'] = (
-    "CREATE INDEX college_id_ind ON draft_picks(`nfl_team`)")
+    "CREATE INDEX nfl_team_ind ON draft_picks(`nfl_team`)")
 
 INDEXES['draft_teams'] = (
     "CREATE INDEX location_ind ON draft_teams(`location`)")
