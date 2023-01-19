@@ -108,7 +108,8 @@ TABLES['draft_teams'] = (
     "  `display_name` varchar(100) NOT NULL,"
     "  `nickname` varchar(100),"
     "  `location` varchar(100),"
-    "  PRIMARY KEY (`display_name`)"
+    "  PRIMARY KEY (`display_name`),"
+    "  FOREIGN KEY (`location`) REFERENCES draft_picks(`nfl_team`)" 
     ")")
 
 INDEXES = {}
@@ -186,7 +187,6 @@ class DBCreator:
 
 
 if __name__ == '__main__':
-    # un-comment next line for connecting to tau servers 
     # os.system("ssh -L 3305:mysqlsrv1.cs.tau.ac.il:3306 lironcohen3@nova.cs.tau.ac.il")
 
     db_creator = DBCreator()
