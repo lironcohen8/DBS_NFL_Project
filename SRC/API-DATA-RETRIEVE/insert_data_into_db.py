@@ -32,16 +32,16 @@ class APIDataInserter:
                 venue_id = int(game['venue_id']) if game['venue_id'] is not None else None
                 home_id = int(game['home_id']) if game['home_id'] is not None else None
                 home_points = int(game['home_points']) if game['home_points'] is not None else None
-                home_post_win_prob = float(game['home_post_win_prob']) if game['home_post_win_prob'] is not None else None
+                home_win_prob = float(game['home_post_win_prob']) if game['home_post_win_prob'] is not None else None
                 away_id = int(game['away_id']) if game['away_id'] is not None else None
                 away_points = int(game['away_points']) if game['away_points'] is not None else None
-                away_post_win_prob = float(game['away_post_win_prob']) if game['away_post_win_prob'] is not None else None
+                away_win_prob = float(game['away_post_win_prob']) if game['away_post_win_prob'] is not None else None
 
-                games_query = """INSERT INTO games(game_id,season,week,venue_id,home_id,home_points,home_post_win_prob,away_id,away_points,away_post_win_prob)
+                games_query = """INSERT INTO games(game_id,season,week,venue_id,home_id,home_points,home_win_prob,away_id,away_points,away_win_prob)
                                  VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
 
                 try:
-                    self.cursor.execute(games_query, (game_id, season, week, venue_id, home_id, home_points, home_post_win_prob, away_id, away_points, away_post_win_prob))
+                    self.cursor.execute(games_query, (game_id, season, week, venue_id, home_id, home_points, home_win_prob, away_id, away_points, away_win_prob))
                     self.conn.commit()
                 except mysql.connector.Error as err:
                     self.conn.rollback()
@@ -202,7 +202,8 @@ class APIDataInserter:
                 self.cursor.execute(draft_teams_query, (display_name, nickname, location))
                 self.conn.commit()
             except mysql.connector.Error as err:
-                self.conn.rollback()
+                if err.errno != 1062:  # Duplicate entry - just ignoring the entry
+                    self.conn.rollback()
 
     def close_conn(self):
         self.conn.close()

@@ -21,7 +21,7 @@ class DBQuery:
     # query 1
     def get_teams_that_won_against_odds(self):
 
-        query = """SELECT T1.team_name AS home_team, T2.team_name as away_team, G.season, G.week, G.away_points, G.home_points, G.away_post_win_prob AS prob, V.name as venue_name
+        query = """SELECT T1.team_name AS home_team, T2.team_name as away_team, G.season, G.week, G.away_points, G.home_points, G.away_win_prob AS prob, V.name as venue_name
                     FROM
                         lironcohen3.games as G,
                         lironcohen3.venues as V,
@@ -29,10 +29,10 @@ class DBQuery:
                         lironcohen3.teams as T2
                     WHERE
                         (G.venue_id = V.venue_id AND G.home_id = T1.team_id AND G.away_id = T2.team_id)
-                        AND (G.home_post_win_prob > G.away_post_win_prob AND G.home_points < G.away_points)
-                        AND (G.away_points - G.home_points > 10  AND G.away_post_win_prob < 0.4) 
+                        AND (G.home_win_prob > G.away_win_prob AND G.home_points < G.away_points)
+                        AND (G.away_points - G.home_points > 10 AND G.away_win_prob < 0.4) 
                 UNION 
-                SELECT T1.team_name AS home_team, T2.team_name as away_team, G.season, G.week, G.away_points, G.home_points, G.away_post_win_prob AS prob, V.name as venue_name
+                SELECT T1.team_name AS home_team, T2.team_name as away_team, G.season, G.week, G.away_points, G.home_points, G.away_win_prob AS prob, V.name as venue_name
                     FROM
                         lironcohen3.games as G,
                         lironcohen3.venues as V,
@@ -40,8 +40,8 @@ class DBQuery:
                         lironcohen3.teams as T2
                     WHERE
                         (G.venue_id = V.venue_id AND G.home_id = T1.team_id AND G.away_id = T2.team_id)
-                        AND (G.home_post_win_prob < G.away_post_win_prob AND G.home_points > G.away_points)
-                        AND (G.home_points - G.away_points > 10  AND G.home_post_win_prob < 0.4)
+                        AND (G.home_win_prob < G.away_win_prob AND G.home_points > G.away_points)
+                        AND (G.home_points - G.away_points > 10  AND G.home_win_prob < 0.4)
                 ORDER BY prob"""
 
         try:
@@ -86,7 +86,7 @@ class DBQuery:
         query = f"""SELECT s1.team, s1.stat_name, s1.stat_value
                     FROM lironcohen3.stats AS s1
                     WHERE
-                        s1.team = "{input_team_name}"
+                        MATCH (s1.team) AGAINST ('{input_team_name}')
                         AND s1.stat_value >= (SELECT AVG(s2.stat_value) AS average_value
                                             FROM lironcohen3.stats AS s2
                                             WHERE s1.stat_name = s2.stat_name

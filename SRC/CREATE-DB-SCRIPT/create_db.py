@@ -39,10 +39,10 @@ TABLES['games'] = (
     "  `venue_id` INT,"
     "  `home_id` INT,"
     "  `home_points` INT,"
-    "  `home_post_win_prob` FLOAT,"
+    "  `home_win_prob` FLOAT,"
     "  `away_id` INT,"
     "  `away_points` INT,"
-    "  `away_post_win_prob` FLOAT,"
+    "  `away_win_prob` FLOAT,"
     "  PRIMARY KEY (`game_id`),"
     "  FOREIGN KEY (`venue_id`) REFERENCES venues(`venue_id`),"
     "  FOREIGN KEY (`home_id`) REFERENCES teams(`team_id`),"
@@ -108,16 +108,15 @@ TABLES['draft_teams'] = (
     "  `display_name` varchar(100) NOT NULL,"
     "  `nickname` varchar(100),"
     "  `location` varchar(100),"
-    "  PRIMARY KEY (`display_name`),"
-    "  FOREIGN KEY (`location`) REFERENCES draft_picks(`nfl_team`)" 
+    "  PRIMARY KEY (`location`)"
     ")")
 
 INDEXES = {}
-INDEXES['games_home_id'] = (
-    "CREATE INDEX home_id_ind ON games(`home_id`)")
-
-INDEXES['game_away_id'] = (
-    "CREATE INDEX away_id_ind ON games(`away_id`)")
+# INDEXES['games_home_id'] = (
+#     "CREATE INDEX home_id_ind ON games(`home_id`)")
+#
+# INDEXES['game_away_id'] = (
+#     "CREATE INDEX away_id_ind ON games(`away_id`)")
 
 INDEXES['teams'] = (
     "CREATE INDEX team_name_ind ON teams(`team_name`)")
@@ -132,7 +131,7 @@ INDEXES['stats_name'] = (
     "CREATE INDEX stat_name_ind ON stats(`stat_name`)")
 
 INDEXES['stats_team'] = (
-    "CREATE INDEX team_ind ON stats(`team`)")
+    "CREATE FULLTEXT INDEX team_ind ON stats(`team`)")
 
 INDEXES['venues'] = (
     "CREATE INDEX state_ind ON venues(`state`)")

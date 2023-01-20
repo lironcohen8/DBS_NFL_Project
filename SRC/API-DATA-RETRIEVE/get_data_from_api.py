@@ -21,7 +21,7 @@ class APIDataGetter:
         return None
 
     @staticmethod
-    def get_teams():  # Number of records - 1791
+    def get_teams():  # Number of records - 1792
         res = requests.get(f"https://api.collegefootballdata.com/teams", headers=headers)
         if res.status_code == 200:
             data = json.loads(res.content)
@@ -69,7 +69,7 @@ class APIDataGetter:
         return None
 
     @staticmethod
-    def get_draft_teams():  # Number of records - 32
+    def get_draft_teams():  # Number of records - 30
         res = requests.get(f"https://api.collegefootballdata.com/draft/teams", headers=headers)
         if res.status_code == 200:
             data = json.loads(res.content)
