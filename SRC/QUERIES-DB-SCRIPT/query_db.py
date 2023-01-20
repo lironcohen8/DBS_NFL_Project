@@ -54,7 +54,7 @@ class DBQuery:
     # query 2
     def get_top_position_players_stats(self, input_position_abb):
 
-        query = f"""SELECT P.player_id, P.name, P.position, T.team_name, 
+        query = f"""SELECT P.name, P.position, T.team_name, 
                         SUM(CASE WHEN G.home_points > G.away_points THEN 1 ELSE 0 END) AS wins,
                         SUM(CASE WHEN G.home_points = G.away_points THEN 1 ELSE 0 END) AS ties,
                         SUM(CASE WHEN G.home_points < G.away_points THEN 1 ELSE 0 END) AS losses,
