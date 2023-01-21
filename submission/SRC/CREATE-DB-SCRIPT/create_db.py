@@ -5,7 +5,7 @@ mysql_user = "lironcohen3"
 mysql_password = "lironcoh27840"
 db_name = "lironcohen3"
 
-# Dictionary for all tables we want to create with their Primary keys and foreign keys
+# Dictionary for all tables we want to create with their primary keys and foreign keys
 
 TABLES = {}
 
@@ -111,13 +111,9 @@ TABLES['draft_teams'] = (
     "  PRIMARY KEY (`location`)"
     ")")
 
-INDEXES = {}
-# INDEXES['games_home_id'] = (
-#     "CREATE INDEX home_id_ind ON games(`home_id`)")
-#
-# INDEXES['game_away_id'] = (
-#     "CREATE INDEX away_id_ind ON games(`away_id`)")
+# Dictionary for all indexes we want to create
 
+INDEXES = {}
 INDEXES['teams'] = (
     "CREATE INDEX team_name_ind ON teams(`team_name`)")
 

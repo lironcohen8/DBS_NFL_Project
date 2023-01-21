@@ -80,7 +80,7 @@ class DBQuery:
             rows = None
         return rows
 
-    # query 3
+    # query 3 - full text
     def get_team_stats_better_than_average(self, input_team_name):
 
         query = f"""SELECT s1.team, s1.stat_name, s1.stat_value
