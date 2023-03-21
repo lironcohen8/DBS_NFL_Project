@@ -1,9 +1,9 @@
 import mysql.connector
 from get_data_from_api import APIDataGetter
 
-mysql_user = "lironcohen3"
-mysql_password = "lironcoh27840"
-db_name = "lironcohen3"
+mysql_user = "XXX"
+mysql_password = "XXX"
+db_name = "XXX"
 
 
 # Creating connection to the DB and inserts the data from the API into the tables

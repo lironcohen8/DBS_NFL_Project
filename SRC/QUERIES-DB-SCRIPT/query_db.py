@@ -1,9 +1,9 @@
 import os
 import mysql.connector
 
-mysql_user = "lironcohen3"
-mysql_password = "lironcoh27840"
-db_name = "lironcohen3"
+mysql_user = "XXX"
+mysql_password = "XXX"
+db_name = "XXX"
 
 
 class DBQuery:
@@ -179,8 +179,6 @@ class DBQuery:
 
 
 if __name__ == '__main__':
-    # os.system("ssh -L 3305:mysqlsrv1.cs.tau.ac.il:3306 lironcohen3@nova.cs.tau.ac.il")
-
     db_query = DBQuery()
     db_query.get_teams_that_won_against_odds()
     db_query.get_top_position_players_stats("QB")

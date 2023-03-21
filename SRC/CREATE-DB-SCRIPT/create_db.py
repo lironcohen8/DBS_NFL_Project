@@ -1,9 +1,9 @@
 import os
 import mysql.connector
 
-mysql_user = "lironcohen3"
-mysql_password = "lironcoh27840"
-db_name = "lironcohen3"
+mysql_user = "XXX"
+mysql_password = "XXX"
+db_name = "XXX"
 
 # Dictionary for all tables we want to create with their Primary keys and foreign keys
 

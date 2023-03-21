@@ -1,11 +1,11 @@
 import json
 import requests
 
-college_football_key = "wy5y2yEYzKbBI8kaIIVqyqzVbBpfTk+kakI1OKiogGfB894/GuGqXbgVO5l8bRVH"
+college_football_key = "XXX"
 
 headers = {
     "accept": "application/json",
-    "Authorization": "Bearer wy5y2yEYzKbBI8kaIIVqyqzVbBpfTk+kakI1OKiogGfB894/GuGqXbgVO5l8bRVH"
+    "Authorization": "Bearer XXX"
 }
 
 
